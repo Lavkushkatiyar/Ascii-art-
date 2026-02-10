@@ -1,5 +1,26 @@
 const decoder = new TextDecoder();
-
+const getBrightnessAscii = (brightness) => {
+  switch (true) {
+    case brightness < 32:
+      return "@";
+    case brightness < 64:
+      return "#";
+    case brightness < 96:
+      return "*";
+    case brightness < 128:
+      return "+";
+    case brightness < 160:
+      return "=";
+    case brightness < 192:
+      return "-";
+    case brightness < 224:
+      return ":";
+    case brightness < 248:
+      return ".";
+    default:
+      return " ";
+  }
+};
 const isWhitespaceByte = (byte) => byte === 10 || byte === 32;
 
 const skipWhitespace = (byteBuffer, cursor) => {
@@ -56,10 +77,12 @@ const getAsciiPixels = (pixelData, { height, width }) => {
       const b = pixelData[i + 2];
 
       const brightness = (r + g + b) / 3;
-      line += brightness < 128 ? "#" : " ";
+      const asciiPixel = getBrightnessAscii(brightness);
+      line += asciiPixel;
     }
     asciiPixels.push(line + "\n");
   }
+
   return asciiPixels;
 };
 
@@ -67,7 +90,5 @@ export const ppmParser = (imageBytes) => {
   const header = parsePPMHeader(imageBytes);
   const pixelData = imageBytes.slice(header.headerLength);
 
-  console.log(pixelData.length);
-  console.log(header.height * header.width * 3);
   return getAsciiPixels(pixelData, header).join("");
 };
