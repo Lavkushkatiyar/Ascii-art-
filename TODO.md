@@ -37,4 +37,7 @@ i will use the ppm format image to perform this first
 
 ```
 2 . rest data of file
+[done] print one row
+[done] print whole the image
+[done] for now i will use only # and .
 ```

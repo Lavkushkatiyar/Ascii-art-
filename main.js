@@ -1,9 +1,9 @@
-import { parsePPMHeader } from "./src/ascii.js";
+import { ppmParser } from "./src/ascii.js";
 
 const main = () => {
   const image = Deno.readFileSync("./assets/cPika.ppm");
-  const header = parsePPMHeader(image);
+  const asciiImage = ppmParser(image);
 
-  console.log(header);
+  console.log(asciiImage);
 };
 main();

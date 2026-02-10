@@ -1,3 +1,5 @@
+const decoder = new TextDecoder();
+
 const isWhitespaceByte = (byte) => byte === 10 || byte === 32;
 
 const skipWhitespace = (byteBuffer, cursor) => {
@@ -20,8 +22,7 @@ const readNextValue = (byteBuffer, cursor, decoder) => {
   );
 };
 
-export const parsePPMHeader = (byteBuffer) => {
-  const decoder = new TextDecoder();
+const parsePPMHeader = (byteBuffer) => {
   const cursor = { value: 0 };
 
   const magicNumber = readNextValue(byteBuffer, cursor, decoder);
@@ -35,9 +36,38 @@ export const parsePPMHeader = (byteBuffer) => {
 
   return {
     magic: magicNumber,
-    width: imageWidth,
-    height: imageHeight,
+    width: Number(imageWidth),
+    height: Number(imageHeight),
     maxVal: maxColorValue,
     headerLength: cursor.value,
   };
+};
+
+const getAsciiPixels = (pixelData, { height, width }) => {
+  const asciiPixels = [];
+  for (let row = 0; row < height; row += 2) {
+    let line = "";
+    const rowStart = row * width * 3;
+    const rowEnd = rowStart + (width * 3);
+
+    for (let i = rowStart; i < rowEnd; i += 3) {
+      const r = pixelData[i];
+      const g = pixelData[i + 1];
+      const b = pixelData[i + 2];
+
+      const brightness = (r + g + b) / 3;
+      line += brightness < 128 ? "#" : " ";
+    }
+    asciiPixels.push(line + "\n");
+  }
+  return asciiPixels;
+};
+
+export const ppmParser = (imageBytes) => {
+  const header = parsePPMHeader(imageBytes);
+  const pixelData = imageBytes.slice(header.headerLength);
+
+  console.log(pixelData.length);
+  console.log(header.height * header.width * 3);
+  return getAsciiPixels(pixelData, header).join("");
 };
