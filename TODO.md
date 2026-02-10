@@ -16,21 +16,25 @@ simple wants to create an ascii version of image
 ```
 i will use the ppm format image to perform this first
 
-1.get a ppm image
-2. read it using the deno readFile
+1.get a ppm image [done]
+2. read it using the deno readFile[done]
 
 3 . now i have to parse it 
+1 header [done]
+```
 
-- ppm parser  
-1 version p6
-whitespace
-# comment  
-2 . width
-whitespace
-3  ,height
-whitespace
+- ppm parser
+- 1 version p6
+- whitespace
 
-4 . max color value
-<whitespace> 
-data
+- 2 . width
+- whitespace
+- 3 ,height
+- whitespace
+
+- 4 . max color value
+- whitespace
+
+```
+2 . rest data of file
 ```
